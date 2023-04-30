@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MultiKick</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <style>
+body {
+  position: fixed;
+  width: 100%;
+  background-color: #0B0E0F; 
+  color: #050F01;
+}
+
+#nav {
+  background-color: #24272C;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 0.25rem;
+}
+    
+.paragraph {
+  font-family: "Times New Roman", Times, serif;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  font-size: 19px;
+  color: #fff;
+}
+
+button {
+  cursor: pointer;
+  font-weight: bold;
+  background-color: #0B0E0F;
+  color: #fff;
+  padding: 6px 23px;
+  border-radius: 4px;
+  border: 1px solid #24272C;   
+}
+
+button:active,
+button:focus {
+  background-color: #53FC18;
+  color: #000000;
+  outline: none;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  padding: .4rem .725rem;
+  font-weight: 700;
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";
+  line-height: 1.25;
+  --tw-text-opacity: 1;
+  border: none;
+  color: rgb(31 41 55 / var(--tw-text-opacity));
+}
+
+.btn.btn-primary {
+  --tw-bg-opacity: 1;
+  background-color: rgb(83 252 24 / var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(31 41 55 / var(--tw-text-opacity));
+}
+
+.btn.btn-primary:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(58 211 5 / var(--tw-bg-opacity));
+}
+
+  #chatroomContainer {
+  position: fixed;
+  display: flex;
+  width: 100%;
+  left: 76%;
+  top: 8%;
+  overflow: hidden;
+}
+
+.button.active {
+  background-color: #53FC18;
+  color: #191B1F;
+}
+
+input[type="text"] {
+  margin-right: 2px;
+  padding: 6px;
+}
+
+.input-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.Chinput {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #53FC18;
+  color: white;
+  font-weight: bold;
+  width: 150px;
+  margin: 0 67px;
+  text-align: center;
+}
+
+.Chinput::placeholder {
+  color: white;
+}
+
+#Stream1,
+#Stream2,
+#Stream3,
+#Stream4 {
+  display: none;
+  overflow: hidden;
+  border: 1px solid #53FC18;
+  margin: 2px;
+}
+
+div {
+  margin-top: -7px;
+}
+
+#chatButtons {
+  position: fixed;
+  display: flex;
+  width: 100%;
+  left: 77%;
+  top: 10%;
+}
+a {
+  font-weight: bold;
+  color: #fff;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #53FC18;
+}
+
+</style>
+</head>
+<body>
+<nav id="nav">
+<img src="logo.png" height="24px" width="100px" style="position: relative; top: 6px; left: 20px;">
+<input type="text" id="input1" class="Chinput" placeholder="Channel 1">
+<input type="text" id="input2" class="Chinput" placeholder="Channel 2">
+<input type="text" id="input3" class="Chinput" placeholder="Channel 3">
+<input type="text" id="input4" class="Chinput" placeholder="Channel 4">
+
+<button id="pp" onclick="renderStream()" class="btn btn-primary">Watch</button>
+<button id="toggleChat" class="btn btn-primary">Chatrooms</button>
+</nav>
+<div>
+<iframe id="Stream1" src="" frameborder="0" allowfullscreen="true" scrolling="no" style="display:none; overflow:hidden;"></iframe>
+<iframe id="Stream2" src="" frameborder="0" allowfullscreen="true" scrolling="no" style="display:none; overflow:hidden;"></iframe>
+<iframe id="Stream3" src="" frameborder="0" allowfullscreen="true" scrolling="no" style="display:none; overflow:hidden;"></iframe>
+<iframe id="Stream4" src="" frameborder="0" allowfullscreen="true" scrolling="no" style="display:none; overflow:hidden;"></iframe>
+</div>
+<div>
+  <div id="chatroomContainer"></div>
+</div>
+<div id="chatButtons"></div>
+
+<div class="paragraph">
+    <p>Welcome to MultiKick! you have the ability to watch up to four streams simultaneously,
+      making it convenient to keep up with your favorite streamers. Just enter the channel names in the provided input fields,
+      e.g adinross click the 'Watch' button, and enjoy real-time content. Please note that currently <a href="https://kick.com">kick</a> does not offer the functionality
+       to embed streams. Therefore, to watch the stream fullscreen and remove that annoying navigation bar, please click on "Enter Theater Mode" and subsequently 
+       close the original chat for each embed.
+    </p>
+  </div>
+<script>
+document.getElementById('pp').addEventListener('click', function() {
+            var paragraph = document.querySelector('.paragraph');
+            if (paragraph) {
+                paragraph.remove();
+            }
+        });  
+var inputs = document.querySelectorAll("#input1, #input2, #input3, #input3");
+    for (var i = 0; i < inputs.length; i++) {
+        inputs[i].addEventListener("input", function() {
+            this.classList.add("bold");
+        });
+    }
+
+var buttons = document.querySelectorAll('#toggling .button');
+for (var i = 0; i < buttons.length; i++) {
+  buttons[i].addEventListener('click', function() {
+    for (var j = 0; j < buttons.length; j++) {
+      buttons[j].classList.remove('active');
+    }
+    
+    this.classList.add('active');
+  });
+}
+var chatroomFrames = [];
+var currentChatroom = null;
+var StreamIframeOne = document.getElementById("Stream1");
+var StreamIframeTwo = document.getElementById("Stream2");
+var StreamiframeThree = document.getElementById("Stream3");
+var StreamiframeFour = document.getElementById("Stream4");
+var hasRenderStreamBeenCalled = false;
+
+function renderStream() {
+  var channel1 = document.getElementById("input1").value.trim();
+  var channel2 = document.getElementById("input2").value.trim();
+  var channel3 = document.getElementById("input3").value.trim();
+  var channel4 = document.getElementById("input4").value.trim();
+
+  
+  var iframeWidth = "640px";
+  var iframeHeight = "480px";
+
+  var numChannels = 0;
+  if (channel1 !== '') {
+    numChannels++;
+  }
+  if (channel2 !== '') {
+    numChannels++;
+  }
+  if (channel3 !== '') {
+    numChannels++;
+  }
+  if (channel4 !== '') {
+    numChannels++;
+  }
+
+  if (numChannels === 1) {
+    iframeWidth = "70%";
+    iframeHeight = "87%";
+  } else if (numChannels === 2) {
+    iframeWidth = "42%";
+    iframeHeight = "46%";
+  } else if (numChannels === 3) {
+    iframeWidth = "37%";
+    iframeHeight = "46%";
+  } else if (numChannels === 4) {
+    iframeWidth = "37%";
+    iframeHeight = "46%";
+  }
+
+  if (channel1 !== '') {
+    StreamIframeOne.src = "https://kick.com/" + channel1;
+    StreamIframeOne.style.display = "block";
+    StreamIframeOne.style.width = iframeWidth;
+    StreamIframeOne.style.height = iframeHeight;
+    StreamIframeOne.style.position = "fixed";
+    StreamIframeOne.style.top = "8%";
+    StreamIframeOne.style.right = "25%";
+  } else {
+    StreamIframeOne.style.display = "none";
+  }
+
+  if (channel2 !== '') {
+    StreamIframeTwo.src = "https://kick.com/" + channel2;
+    StreamIframeTwo.style.display = "block";
+    StreamIframeTwo.style.width = iframeWidth;
+    StreamIframeTwo.style.height = iframeHeight;
+    StreamIframeTwo.style.position = "fixed";
+    StreamIframeTwo.style.top = "53%";
+    StreamIframeTwo.style.right = "45%";
+    StreamIframeOne.style.top = "7%";
+    StreamIframeOne.style.right = "45%";
+  } else {
+    StreamIframeTwo.style.display = "none";
+  }
+
+  if (channel3 !== '') {
+    StreamiframeThree.src = "https://kick.com/" + channel3;
+    StreamiframeThree.style.display = "block";
+    StreamiframeThree.style.width = iframeWidth;
+    StreamiframeThree.style.height = iframeHeight;
+    StreamiframeThree.style.position = "fixed";
+    StreamiframeThree.style.top = "53%";
+    StreamiframeThree.style.right = "44%";
+    StreamIframeOne.style.width = iframeWidth;
+    StreamIframeOne.style.height = iframeHeight;
+    StreamIframeOne.style.top = "7%";
+    StreamIframeOne.style.right = "62%";
+    StreamIframeTwo.style.width = iframeWidth;
+    StreamIframeTwo.style.height = iframeHeight;
+    StreamIframeTwo.style.top = "7%";
+    StreamIframeTwo.style.right = "25%";
+  } else {
+    StreamiframeThree.style.display = "none";
+  }
+
+  if (channel4 !== '') {
+    StreamiframeFour.src = "https://kick.com/" + channel4;
+    StreamiframeFour.style.display = "block";
+    StreamiframeFour.style.width = iframeWidth;
+    StreamiframeFour.style.height = iframeHeight;
+    StreamiframeFour.style.position = "fixed";
+    StreamiframeFour.style.top = "53%";
+    StreamiframeFour.style.right = "25%";
+    StreamiframeThree.style.top = "53%";
+    StreamiframeThree.style.right = "62%";
+    StreamIframeOne.style.width = iframeWidth;
+    StreamIframeOne.style.height = iframeHeight;
+    StreamIframeOne.style.top = "7%";
+    StreamIframeOne.style.right = "62%";
+    StreamIframeTwo.style.width = iframeWidth;
+    StreamIframeTwo.style.height = iframeHeight;
+    StreamIframeTwo.style.top = "7%";
+    StreamIframeTwo.style.right = "25%";
+  } else {
+    StreamiframeFour.style.display = "none";
+  }
+  var channels = [channel1, channel2, channel3, channel4];
+  for (var i = 0; i < channels.length; i++) {
+    if (channels[i] !== '') {
+      if (chatroomFrames.indexOf(channels[i]) === -1) {
+        renderChatroomFrame(channels[i], i);
+        chatroomFrames.push(channels[i]);
+      }
+  }
+    var toggleChat = document.getElementById("toggleChat");
+    const chatButtonsDiv = document.getElementById("chatButtons");
+const addedChannels = [];
+const existingButtons = chatButtonsDiv.querySelectorAll("button");
+existingButtons.forEach(button => button.remove());
+
+for (let i = 1; i <= 4; i++) {
+  const channelInput = document.getElementById(`input${i}`);
+  const channelName = channelInput.value.trim();
+
+  if (channelName && !addedChannels.includes(channelName)) {
+    const button = document.createElement("button");
+    button.className = "ChatButton";
+    button.dataset.channel = i - 1;
+    button.textContent = channelName;
+    button.addEventListener("click", toggleChatroom);
+    chatButtonsDiv.appendChild(button);
+    addedChannels.push(channelName);
+  }
+}
+
+function toggleChatroom(event) {
+  const channel = event.target;
+  if (currentChatroom !== null) {
+    chatroomFrames[currentChatroom].style.display = "none";
+  }
+
+  const chatroomIndex = parseInt(channel.getAttribute("data-channel"));
+  chatroomFrames[chatroomIndex].style.display = "block";
+
+  currentChatroom = chatroomIndex;
+}
+const button = document.querySelector('button.ChatButton[data-channel="0"]');
+button.click();
+  
+  }
+}
+
+function renderChatroomFrame(channel, index) {
+  var existingFrame = chatroomFrames.find(function(frame) {
+    return frame.src === "https://kick.com/" + channel + "/chatroom";
+  });
+
+  if (!existingFrame) {
+    var Chatiframe = document.createElement("iframe");
+    Chatiframe.src = "https://kick.com/" + channel + "/chatroom";
+    Chatiframe.style.position = "fixed";
+    Chatiframe.style.top = "8%";
+    Chatiframe.style.right = "0%";
+    Chatiframe.style.border = "none";
+    Chatiframe.style.width = "23%";
+    Chatiframe.style.height = "calc(100% - 43px)";
+
+    document.getElementById("chatroomContainer").appendChild(Chatiframe);
+
+    chatroomFrames[index] = Chatiframe;
+  }
+}
+
+
+
+
+document.getElementById('toggleChat').addEventListener('click', function() {
+  var chatroomContainer = document.getElementById("chatroomContainer");
+  
+
+  if (chatroomContainer.style.display === 'none') {
+    chatroomContainer.style.display = 'block';
+  } else {
+    chatroomContainer.style.display = 'none';
+  }
+});
+</script>
+</body>
+</html>
